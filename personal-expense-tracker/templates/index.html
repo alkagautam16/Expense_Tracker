@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Dashboard{% endblock %} · SpendWise</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+  <aside class="sidebar" id="sidebar">
+    <div class="logo">💜 SpendWise</div>
+    <nav>
+      <a href="{{ url_for('dashboard') }}" class="{{ 'active' if page=='dashboard' }}">📊 Dashboard</a>
+      <a href="{{ url_for('add_expense') }}" class="{{ 'active' if page=='add' }}">➕ Add Expense</a>
+      <a href="{{ url_for('expenses') }}" class="{{ 'active' if page=='expenses' }}">🧾 Expenses</a>
+      <a href="{{ url_for('budget') }}" class="{{ 'active' if page=='budget' }}">🎯 Budget</a>
+      <a href="{{ url_for('reports') }}" class="{{ 'active' if page=='reports' }}">📄 Reports</a>
+    </nav>
+  </aside>
+  <main class="main">
+    <header class="topbar">
+      <button class="menu-btn" id="menuBtn" aria-label="Menu">☰</button>
+      <h1>{{ self.title() }}</h1>
+      <span class="month-pill">{{ stats.month_name }}</span>
+    </header>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% for cat, msg in messages %}<div class="alert {{ cat }}">{{ msg }}</div>{% endfor %}
+    {% endwith %}
+    {% if stats.budget and stats.percent >= 100 %}
+      <div class="alert danger">🚨 You have exceeded your monthly budget!</div>
+    {% elif stats.budget and stats.percent >= 80 %}
+      <div class="alert warning">⚠️ You have used {{ '%.0f'|format(stats.percent) }}% of your monthly budget.</div>
+    {% endif %}
+    {% block content %}{% endblock %}
+  </main>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>

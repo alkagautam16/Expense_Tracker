@@ -1,0 +1,16 @@
+{% extends "index.html" %}
+{% block title %}Reports{% endblock %}
+{% block content %}
+<div class="card">
+  <div class="row-between">
+    <h3>Monthly Summary</h3>
+    <a class="btn" href="{{ url_for('export_csv') }}">⬇ Download CSV</a>
+  </div>
+  {% if rows %}
+  <div class="table-wrap"><table>
+    <tr><th>Month</th><th class="r">Transactions</th><th class="r">Total Spent</th></tr>
+    {% for r in rows %}<tr><td>{{ r.month }}</td><td class="r">{{ r.n }}</td><td class="r">₹{{ '%.2f'|format(r.total) }}</td></tr>{% endfor %}
+  </table></div>
+  {% else %}<p class="muted">No data yet.</p>{% endif %}
+</div>
+{% endblock %}

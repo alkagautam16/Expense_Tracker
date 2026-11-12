@@ -1,0 +1,26 @@
+{% extends "index.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+<section class="cards">
+  <div class="card stat"><span>Total Expenses</span><strong>₹{{ '%.2f'|format(stats.total) }}</strong></div>
+  <div class="card stat"><span>This Month</span><strong>₹{{ '%.2f'|format(stats.month_total) }}</strong></div>
+  <div class="card stat"><span>Transactions</span><strong>{{ stats.count }}</strong></div>
+  <div class="card stat"><span>Remaining Budget</span>
+    <strong>{% if stats.budget %}₹{{ '%.2f'|format(stats.remaining) }}{% else %}<a href="{{ url_for('budget') }}">Set budget</a>{% endif %}</strong></div>
+</section>
+<section class="grid2">
+  <div class="card"><h3>Spending by Category</h3><div class="chart-box"><canvas id="pieChart"></canvas></div></div>
+  <div class="card"><h3>Monthly Spending</h3><div class="chart-box"><canvas id="barChart"></canvas></div></div>
+</section>
+<section class="card">
+  <h3>Recent Transactions</h3>
+  {% if recent %}
+  <div class="table-wrap"><table>
+    <tr><th>Date</th><th>Category</th><th>Description</th><th class="r">Amount</th></tr>
+    {% for e in recent %}
+    <tr><td>{{ e.date }}</td><td><span class="tag">{{ e.category }}</span></td><td>{{ e.description }}</td><td class="r">₹{{ '%.2f'|format(e.amount) }}</td></tr>
+    {% endfor %}
+  </table></div>
+  {% else %}<p class="muted">No expenses yet. <a href="{{ url_for('add_expense') }}">Add your first one</a>.</p>{% endif %}
+</section>
+{% endblock %}
